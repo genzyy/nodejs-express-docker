@@ -49,20 +49,91 @@ const getDrivers = (req, res) => {
           )
         );
     } else {
+      res.status(HttpStatus.OK.code).send(
+        new Response(
+          HttpStatus.OK.code,
+          HttpStatus.OK.status,
+          'Drivers Found!',
+          {
+            drivers: result,
+          }
+        )
+      );
+    }
+  });
+};
+
+const createDriver = (req, res) => {
+  log.info(`${req.method} ${req.originalurl}, creating driver`);
+  database.query(
+    QUERY.CREATE_DRIVER,
+    Object.values(req.body),
+    (error, result) => {
+      log.error(error.message);
+      if (!result) {
+        res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR.code)
+          .send(
+            new Response(
+              HttpStatus.INTERNAL_SERVER_ERROR.code,
+              HttpStatus.INTERNAL_SERVER_ERROR.status,
+              'Error Occured...',
+              []
+            )
+          );
+      } else {
+        const driver = {
+          id: result.insertedId,
+          ...req.body,
+          entered_at: new Date().toLocaleString(),
+        };
+        res
+          .status(HttpStatus.OK.code)
+          .send(
+            new Response(
+              HttpStatus.CREATED.code,
+              HttpStatus.CREATED.status,
+              'Driver Created!',
+              driver
+            )
+          );
+      }
+    }
+  );
+};
+
+const getDriver = (req, res) => {
+  log.info(`${req.method} ${req.originalurl}, fetching driver`);
+  database.query(QUERY.SELECT_DRIVER, [req.params.id], (error, result) => {
+    if (!result[0]) {
       res
-        .status(HttpStatus.OK.code)
+        .status(HttpStatus.NOT_FOUND.code)
         .send(
           new Response(
-            HttpStatus.OK.code,
-            HttpStatus.OK.status,
-            'Drivers Found!',
-            result
+            HttpStatus.NOT_FOUND.code,
+            HttpStatus.NOT_FOUND.status,
+            `No Driver Found with id: ${req.params.id}...`,
+            []
           )
         );
+    } else {
+      res.status(HttpStatus.OK.code).send(
+        new Response(
+          HttpStatus.OK.code,
+          HttpStatus.OK.status,
+          'Driver Found!',
+          {
+            driver: result[0],
+          }
+        )
+      );
     }
   });
 };
 
 module.exports = {
   HttpStatus,
+  getDrivers,
+  createDriver,
+  getDriver,
 };
