@@ -131,7 +131,7 @@ const getDriver = (req, res) => {
   });
 };
 
-export const updatePatient = (req, res) => {
+const updateDriver = (req, res) => {
   logger.info(`${req.method} ${req.originalUrl}, fetching patient`);
   database.query(QUERY.SELECT_PATIENT, [req.params.id], (error, results) => {
     if (!results[0]) {
@@ -179,7 +179,7 @@ export const updatePatient = (req, res) => {
   });
 };
 
-export const deletePatient = (req, res) => {
+const deleteDriver = (req, res) => {
   logger.info(`${req.method} ${req.originalUrl}, deleting patient`);
   database.query(QUERY.DELETE_PATIENT, [req.params.id], (error, results) => {
     if (results.affectedRows > 0) {
@@ -212,4 +212,6 @@ module.exports = {
   getDrivers,
   createDriver,
   getDriver,
+  updateDriver,
+  deleteDriver,
 };

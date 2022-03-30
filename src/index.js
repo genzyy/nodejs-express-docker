@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const Response = require('./domain/response.js').Response;
 const log = require('./util/logger.js').log;
-const HttpStatus = require('./controller/patient.controller').HttpStatus;
+const HttpStatus = require('./controller/drivers.controller').HttpStatus;
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
