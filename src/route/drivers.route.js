@@ -14,3 +14,7 @@ driverRoutes
   .get(getDriver)
   .put(updateDriver)
   .delete(deleteDriver);
+
+module.exports = {
+  driverRoutes,
+};
